@@ -1,0 +1,4 @@
+version: '3.8'
+
+# Coming in Day 3
+# Will include: Kafka, Zookeeper, Redis, Elasticsearch, Kibana, LocalStack
