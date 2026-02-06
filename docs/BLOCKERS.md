@@ -1,14 +1,44 @@
-# Current Blockers
+# Current Blockers & Issues
 
-**Status**: None ✅
+Track blocking issues that need resolution.
+
+## 🟢 Status: No Active Blockers ✅
+
+All systems operational. Day 1 completed successfully.
 
 ---
 
-Template:
+## Resolved Blockers
+
+_None yet_
+
+---
+
+## Blocker Template
+```markdown
 ## [Blocker Title]
-**Date**: Day X
-**Service**: [Which service]
-**Issue**: [Description]
-**Impact**: [How it affects progress]
-**Attempted**: [What I tried]
-**Status**: 🔴 Open / 🟡 In Progress / 🟢 Resolved
+**Date Opened**: Day X  
+**Service/Area**: [Which service affected]  
+**Severity**: 🔴 Critical / 🟡 High / 🟢 Medium / ⚪ Low  
+
+**Issue**: 
+[Detailed description of the problem]
+
+**Impact**: 
+[How this affects progress - timeline, features, etc.]
+
+**Attempted Solutions**:
+1. Tried X - didn't work because Y
+2. Tried Z - partially worked but...
+
+**Current Status**: 🔴 Open / 🟡 In Progress / 🟢 Resolved  
+
+**Resolution** (if resolved):
+[How it was fixed]
+
+**Date Resolved**: Day X
+```
+
+---
+
+**Last Updated**: Day 1
