@@ -69,7 +69,7 @@ zookeeper       confluentinc/cp-zookeeper:7.5.0    Up (healthy)   0.0.0.0:2181->
 |---------|------|-------------|-----------|
 | **Zookeeper** | 2181 | Kafka coordination | CLI only |
 | **Kafka** | 9092, 29092 | Event streaming | CLI only |
-| **Redis** | 6379 | Cache & sessions | CLI: `redis-cli` |
+| **Redis** | 6380 | Cache & sessions | CLI: `redis-cli` |
 | **Elasticsearch** | 9200, 9300 | Search & logging | http://localhost:9200 |
 | **Kibana** | 5601 | Log visualization | http://localhost:5601 |
 | **LocalStack** | 4566 | AWS S3 simulation | http://localhost:4566 |
