@@ -30,6 +30,7 @@ Docker volume mount on Windows/WSL2 has permission conflicts when LocalStack tri
 1. Volume mount: `localstack-data:/tmp/localstack`
 2. Docker socket mount: `/var/run/docker.sock:/var/run/docker.sock`
 3. LocalStack's initialization scripts trying to clean/manage the directory
+4. The persistence feature in localstack is not free and I spent all my military paycheck on claude pro(dammit 7 youre NOT the brigade)
 
 Created a permission conflict that prevented container startup.
 

@@ -47,7 +47,7 @@ Weekly summaries and reflections.
 - Created comprehensive `docker/docker-compose.yml` with 6 services
 - Configured Zookeeper (port 2181) for Kafka coordination
 - Configured Kafka (ports 9092, 29092) with health checks
-- Configured Redis (port 6379) with persistence and LRU eviction
+- Configured Redis (port 6380) with persistence and LRU eviction
 - Configured Elasticsearch (port 9200) with 512MB heap
 - Configured Kibana (port 5601) connected to Elasticsearch
 - Configured LocalStack (port 4566) for S3 simulation
