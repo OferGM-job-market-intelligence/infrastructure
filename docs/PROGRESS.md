@@ -1,6 +1,6 @@
 # Progress Tracker
 
-**Current**: Day 5 / 90 (5.6% complete)  
+**Current**: Day 6 / 90 (6.7% complete)  
 **Week**: 1 / 15  
 **Phase**: Foundation  
 **Repository Structure**: Multi-repo (9 repositories)
@@ -9,7 +9,7 @@
 
 | Phase | Days | Status | Completion |
 |-------|------|--------|------------|
-| Foundation | 1-7 | 🚧 In Progress | 71% |
+| Foundation | 1-7 | 🚧 In Progress | 86% |
 | Scraper (Bun) | 8-14 | ⏳ Pending | 0% |
 | NLP (Python) | 15-22 | ⏳ Pending | 0% |
 | Aggregation (Go) | 23-28 | ⏳ Pending | 0% |
@@ -123,26 +123,59 @@ Day 3 work was comprehensive and included all Day 4 tasks:
 
 ---
 
+#### Day 6: Skill Taxonomy Data ✅ (3h)
+**Completed**:
+- ✅ Created `data/skill-taxonomy.json` with 503 skills and 1,441 aliases
+- ✅ Programming Languages: 50 skills (Python, JavaScript, TypeScript, Go, Rust, etc.)
+- ✅ Frameworks: 106 skills (React, Angular, Vue, Next.js, Django, Spring Boot, etc.)
+- ✅ Databases: 32 skills (PostgreSQL, MongoDB, Redis, Elasticsearch, vector DBs, etc.)
+- ✅ Cloud Platforms: 25 skills (AWS, Azure, GCP, Vercel, specific AWS services, etc.)
+- ✅ DevOps Tools: 52 skills (Docker, Kubernetes, Terraform, CI/CD pipelines, etc.)
+- ✅ ML & Data Science: 53 skills (TensorFlow, PyTorch, Pandas, LLM tools, MLOps, etc.)
+- ✅ Testing: 31 skills (Jest, Cypress, Pytest, Selenium, load testing, etc.)
+- ✅ Soft Skills: 52 skills (Leadership, Agile, Communication, System Design, etc.)
+- ✅ Other: 102 skills (REST API, Microservices, Security, Architecture patterns, etc.)
+- ✅ Updated `types/skill.ts` — Added `'testing'` to `SkillCategory`, added `SkillTaxonomyEntry` and `SkillTaxonomy` interfaces
+- ✅ Updated `data/constants.ts` — Added `'testing'` to `SKILL_CATEGORIES` array
+
+**Taxonomy Structure** (per skill):
+- `canonical` — Standardized name (used as key across all services)
+- `aliases` — Alternative spellings/abbreviations for NLP matching
+- `category` — One of 9 categories
+- `related` — Connected skills for recommendations and gap analysis
+
+**Category Breakdown**:
+| Category | Count | Target | Status |
+|----------|-------|--------|--------|
+| framework | 106 | 100+ | ✅ |
+| other | 102 | — | ✅ |
+| ml_library | 53 | 50+ | ✅ |
+| devops_tool | 52 | 50+ | ✅ |
+| soft_skill | 52 | 50+ | ✅ |
+| programming_language | 50 | 50+ | ✅ |
+| database | 32 | 30+ | ✅ |
+| testing | 31 | 20+ | ✅ |
+| cloud_platform | 25 | 20+ | ✅ |
+
+**Time**: 3 hours  
+**Blockers**: None
+
+---
+
 ## 🚧 In Progress
 
 ### Week 1: Foundation
 
-#### Day 6: Skill Taxonomy Data 🚧
-**Goal**: Create comprehensive skill taxonomy with 500+ skills  
+#### Day 7: Scripts and Automation 🚧
+**Goal**: Create install, test, and deploy scripts for development workflow  
 **Tasks**:
-- [ ] Navigate to `shared` repository
-- [ ] Create `data/skill-taxonomy.json`
-- [ ] Add 500+ skills across categories:
-  - Programming Languages (50+)
-  - Frameworks (100+)
-  - Databases (30+)
-  - Cloud Platforms (20+)
-  - DevOps Tools (50+)
-  - ML/Data Science (50+)
-  - Testing (20+)
-  - Soft Skills (50+)
-- [ ] For each skill include: canonical name, aliases, category, related skills
-- [ ] Create `data/constants.ts` updates if needed
+- [ ] Create `scripts/install.sh` — Install all service dependencies
+- [ ] Create `scripts/dev.sh` — Start all services in development mode
+- [ ] Create `scripts/test.sh` — Run tests across all services
+- [ ] Create `scripts/lint.sh` — Lint all codebases
+- [ ] Create `scripts/health-check.sh` — Verify all services are running
+- [ ] Create `Makefile` with common commands
+- [ ] Test all scripts end-to-end
 - [ ] Commit and push
 
 **Expected Time**: 2-3 hours  
@@ -152,14 +185,15 @@ Day 3 work was comprehensive and included all Day 4 tasks:
 
 ## 📋 Upcoming
 
-### Week 1: Foundation (Remaining)
-- **Day 6**: Skill taxonomy data (500+ skills JSON) (2-3h)
-- **Day 7**: Scripts and automation (install, test, deploy) (2-3h)
-
 ### Week 2-3: Scraper Service
 - **Day 8-9**: Bun.js setup, Kafka producer, Redis client (4-5h)
 - **Day 10-12**: Base scraper class, LinkedIn scraper (7-8h)
 - **Day 13-14**: Indeed scraper, testing, Docker (4-5h)
+
+### Week 3-4: NLP Service
+- **Day 15-16**: Python project setup, spaCy pipeline (4-5h)
+- **Day 17-19**: Skill extraction engine, taxonomy matching (6-8h)
+- **Day 20-22**: Kafka consumer, testing, Docker (4-5h)
 
 ---
 
@@ -170,7 +204,8 @@ Day 3 work was comprehensive and included all Day 4 tasks:
 - [x] **Day 3**: Database configured ✅
 - [x] **Day 4**: Database tested ✅
 - [x] **Day 5**: Shared types complete ✅
-- [ ] **Day 7**: Foundation complete (2 days remaining)
+- [x] **Day 6**: Skill taxonomy complete ✅
+- [ ] **Day 7**: Foundation complete (1 day remaining)
 - [ ] **Day 14**: Jobs flowing to Kafka
 - [ ] **Day 22**: Skills extracted (85%+ accuracy)
 - [ ] **Day 28**: Trends calculating
@@ -193,13 +228,14 @@ Day 3 work was comprehensive and included all Day 4 tasks:
 | Database Indexes | 20+ | 20+ | ✅ |
 | Test Data | Comprehensive | 15 documents | ✅ |
 | Shared Types | Complete | 4 type files, 25+ utilities | ✅ |
+| Skill Taxonomy | 500+ skills | 503 skills, 1,441 aliases | ✅ |
 | Services Implemented | 5 | 0 | 🚧 |
 | Tests Written | 100+ | 0 | ⏳ |
 | Code Coverage | 80%+ | N/A | ⏳ |
 | API Response Time | <50ms | N/A | ⏳ |
 | NLP Accuracy | 85%+ | N/A | ⏳ |
 | Jobs Processed Daily | 10,000+ | 0 | ⏳ |
-| Skills Tracked | 500+ | 5 (test) | 🚧 |
+| Skills Tracked | 500+ | 503 | ✅ |
 
 ---
 
@@ -229,7 +265,7 @@ Day 3 work was comprehensive and included all Day 4 tasks:
 
 ---
 
-**Last Updated**: Day 5 - 11/02/2026  
-**Days Completed**: 5/7 (71%)  
+**Last Updated**: Day 6 - 11/02/2026  
+**Days Completed**: 6/7 (86%)  
 **Week 1 Progress**: Ahead of schedule ✅  
-**Next Update**: Day 6
+**Next Update**: Day 7
