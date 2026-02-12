@@ -319,7 +319,6 @@ After starting all services:
 
 ## 📖 Additional Documentation
 
-- [MongoDB Setup Guide](docs/mongodb-setup.md) - Coming Day 3
 - [Architecture Overview](../.github/docs/architecture-overview.md)
 - [90-Day Work Plan](../.github/docs/90-day-detailed-workplan.md)
 
