@@ -2,7 +2,7 @@
 
 Weekly summaries and reflections.
 
-## Week 1: Foundation (Days 1-7)
+## Week 1: Foundation (Days 1-7) ✅ Complete
 
 ### Goals
 - Set up organization and repository structure
@@ -64,167 +64,19 @@ The original plan separated MongoDB setup (Day 3) from testing (Day 4), but I co
 2. **Schema Validation at Database Level**
    - **Why**: Data integrity safety net beyond application logic
    - **Implementation**: JSON Schema validation on all collections
-   - **Benefits**: 
-     - Email format validation (regex patterns)
-     - Enum constraints (roles, experience, categories)
-     - Required field enforcement
-     - Type safety (dates, numbers, strings, arrays)
-   - **Example**: Users must have valid email, role must be "user"/"premium"/"admin"
 
 3. **IP Whitelist: 0.0.0.0/0** (All IPs)
    - **Why**: Simplifies development (dynamic IPs, Docker containers)
-   - **Trade-off**: Less secure than specific IP whitelist
    - **Mitigation**: Strong password, will restrict in production
-   - **Impact**: Zero connection issues during development
 
 4. **Comprehensive Index Strategy**
-   - **Unique indexes**: email, job_id, canonical_name (prevent duplicates)
-   - **Time-based indexes**: scraped_at, date, created_at (common queries)
-   - **Compound indexes**: location (city + state), skill trends (skill_id + date)
-   - **Text indexes**: Full-text search on jobs (title, description, company)
    - **Result**: ~20+ indexes optimized for read-heavy workload
    - **Trade-off**: Slightly slower writes (acceptable for this use case)
 
 5. **Test Data Strategy**
    - **Minimal but representative**: 3 users, 5 skills, 3 jobs, 4 trends
-   - **Purpose**: Validate schema, test queries, verify indexes
-   - **Quality**: Real-world examples with proper structure
-   - **Impact**: Immediate validation of database design
 
-
-**Learnings**:
-
-1. **Schema Validation is Worth the Effort**
-   - JSON Schema syntax is verbose but powerful
-   - Catches data issues immediately at write time
-   - Provides documentation of expected structure
-   - Safety net that complements application validation
-   - Example: Prevented invalid email insertion during testing
-
-2. **Index Design Requires Query Pattern Analysis**
-   - Must match actual query patterns (not just guesses)
-   - Compound index order matters (most selective first)
-   - Text indexes are powerful but have overhead
-   - Too many indexes slow writes (balance needed)
-   - Verified with `.explain("executionStats")` - all queries using indexes
-
-3. **Database Design Impacts Everything**
-   - Good schema design now = easier service development later
-   - Validation rules enforce contracts between services
-   - Indexes determine query performance from day one
-   - Test data helps validate design decisions early
-   - Documentation is essential (6 months from now, you'll forget)
-
-**Technical Highlights**:
-
-**Collections & Documents**:
-```
-users (3 documents)
-├── admin@jobmarket.com (admin role)
-├── user@example.com (user role)
-└── premium@example.com (premium role)
-
-skills (5 documents)
-├── Python (programming_language)
-├── JavaScript (programming_language)
-├── React (framework)
-├── Docker (devops_tool)
-└── MongoDB (database)
-
-jobs (3 documents)
-├── Senior Software Engineer @ Tech Corp (SF, $120k-$180k)
-├── Full Stack Developer @ Startup Inc (NYC, $90k-$130k)
-└── Junior Python Developer @ Data Solutions (Austin, $60k-$80k)
-
-skill_trends (4 documents)
-├── Python: 1,250 mentions, trending up
-├── JavaScript: 2,100 mentions, stable
-├── React: 1,800 mentions, trending up
-└── Docker: 980 mentions, trending up
-```
-
-**Index Performance Validation**:
-```javascript
-// Tested queries with explain plans
-✅ db.jobs.find({ skills_extracted: "Python" }).explain()
-   → Uses skills_extracted index (IXSCAN)
-   
-✅ db.jobs.find({ $text: { $search: "developer" } }).explain()
-   → Uses text index (TEXT)
-   
-✅ db.skill_trends.find({ skill_id: "Python" }).sort({ date: -1 }).explain()
-   → Uses compound index skill_id + date (IXSCAN)
-   
-✅ db.users.findOne({ email: "admin@jobmarket.com" }).explain()
-   → Uses email unique index (IXSCAN)
-
-All queries: 0 collection scans, all using indexes ✅
-Query execution times: <10ms with test data ✅
-```
-
-**Schema Validation Examples**:
-```javascript
-// Email validation in action
-db.users.insertOne({
-  email: "invalid-email",  // ❌ Fails regex pattern
-  password_hash: "...",
-  role: "user",
-  created_at: new Date()
-})
-// Error: Document failed validation
-
-// Enum validation in action
-db.users.insertOne({
-  email: "valid@email.com",
-  password_hash: "...",
-  role: "superuser",  // ❌ Not in enum ["user", "premium", "admin"]
-  created_at: new Date()
-})
-// Error: Document failed validation
-```
-
-**Files Created**:
-- Updated `docker/.env` - Connection string (not committed)
-- Updated `docs/PROGRESS.md` - Day 3+4 marked complete
-- Updated `docs/SPRINT-NOTES.md` - This file
-
-**Commits**:
-```bash
-docs(infra): complete Day 3+4 MongoDB Atlas setup and testing
-
-Day 3+4 Complete: MongoDB Atlas ✅ (2h combined)
-- Account and M0 cluster provisioned
-- 4 collections with schema validation
-- 20+ performance-optimized indexes
-- Test data inserted and validated
-- Query performance verified
-```
-
-**Query Examples Documented**:
-```javascript
-// Find all jobs requiring Python
-db.jobs.find({ skills_extracted: "Python" })
-
-// Find high-paying senior roles
-db.jobs.find({ 
-  experience_level: "senior",
-  "salary.min": { $gte: 100000 }
-})
-
-// Full-text search for "developer"
-db.jobs.find({ $text: { $search: "developer" } })
-
-// Get trending skills sorted by popularity
-db.skill_trends.find().sort({ mentions_count: -1 }).limit(5)
-
-// Find all JavaScript framework skills
-db.skills.find({ 
-  category: "framework",
-  related_skills: "JavaScript" 
-})
-```
-
-**Next**: Day 5 - Shared Types Repository (TypeScript type definitions)
+**Next**: Day 5 - Shared Types Repository
 
 ---
 
@@ -241,129 +93,32 @@ db.skills.find({
 **What Was Built**:
 
 **Type Definitions (4 files)**:
-- `types/job.ts` — 10 types/interfaces covering job postings, search, and statistics. Includes `JobPosting`, `Location`, `Salary`, `Company`, `JobSearchFilters`, `JobSearchResults`, `JobStats`, plus enums for `JobSource`, `ExperienceLevel`, `SalaryPeriod`, `EmploymentType`
-- `types/skill.ts` — 12 types/interfaces for skill taxonomy and trend analysis. Includes `Skill`, `SkillTrend`, `SkillWithTrends`, `TrendingSkills`, `SkillGap`, `SkillExtractionResult`, `SkillComparison`, `SkillStatsByCategory`
-- `types/user.ts` — 14 types/interfaces for auth and user management. Includes `User`, `UserPublic`, `UserProfile`, `UserPreferences`, `TokenPair`, `JWTPayload`, `LoginRequest`, `SignupRequest`, `AuthResponse`, `Session`, `LoginAttempt`
-- `types/analytics.ts` — 10 types/interfaces for market analytics. Includes `SalaryStats`, `MarketInsights`, `DashboardStats`, `SkillDemandAnalysis`, `TimeSeriesDataPoint`, `MarketComparison`, `ExportData`
+- `types/job.ts` — 10 types/interfaces covering job postings, search, and statistics
+- `types/skill.ts` — 12 types/interfaces for skill taxonomy and trend analysis
+- `types/user.ts` — 14 types/interfaces for auth and user management
+- `types/analytics.ts` — 10 types/interfaces for market analytics
 
-**Constants (`data/constants.ts`)**:
-- Time constants (seconds, milliseconds)
-- Rate limits per service (scraper, API, auth, public)
-- JWT token expiry configuration
-- Pagination defaults
-- Cache TTL values
-- Scraper and NLP service configuration
-- Kafka topic names
-- Redis key prefixes
-- Password requirements
-- HTTP status codes and error codes
-- Service ports
-- Supported currencies and countries
+**Constants (`data/constants.ts`)**: Rate limits, JWT expiry, cache TTLs, Kafka topics, Redis keys, password requirements, HTTP status codes, error codes, service ports
 
-**Validators (`utils/validators.ts`) — 13 functions**:
-- `isValidEmail()` — RFC 5322 simplified regex
-- `validatePassword()` — Strength validation against requirements
-- `isValidUrl()` — HTTP/HTTPS URL validation
-- `isValidJobId()` — Source_ID format validation
-- `validateSalaryRange()` — Min/max salary validation
-- `validateDateRange()` — Date range validation
-- `validatePagination()` — Page/pageSize validation
-- `sanitizeString()` — HTML/script tag removal
-- `isValidSkillName()` — Skill name format validation
-- `isValidObjectId()` — MongoDB ObjectId format check
-- `isInRange()` — Numeric range validation
-- `hasUniqueValues()` — Array uniqueness check
-- `validateRequiredFields()` — Required field presence check
+**Validators (`utils/validators.ts`)**: 13 functions — email, password, URL, job ID, salary range, date range, pagination, ObjectId, etc.
 
-**Formatters (`utils/formatters.ts`) — 17 functions**:
-- `formatSalary()` / `formatSalaryRange()` — Currency formatting with Intl.NumberFormat
-- `formatDate()` / `formatRelativeTime()` — Date display with short/long/relative modes
-- `formatNumber()` / `formatPercentage()` / `formatChangePercentage()` — Numeric display
-- `formatLocation()` — Location object to string
-- `truncateText()` / `capitalizeWords()` — Text utilities
-- `formatExperienceLevel()` / `formatJobSource()` — Enum display mapping
-- `formatFileSize()` / `formatDuration()` — Size and time display
-- `formatSkillName()` — Skill name normalization (handles JavaScript, Node.js, etc.)
-- `formatTrendDirection()` — Trend with emoji indicators
-- `pluralize()` / `formatList()` — English language utilities
-
-**Package Configuration**:
-- `package.json` with exports map for direct module imports
-- `tsconfig.json` with strict mode, ES2022 target, nodenext module resolution
-- Barrel `index.ts` exporting all types, enums, utils, and constants
+**Formatters (`utils/formatters.ts`)**: 17 functions — salary, date, relative time, number, percentage, location, experience level, job source, skill name, trend direction
 
 **Decisions Made**:
 
 1. **String Literal Unions over TypeScript Enums**
-   - **Choice**: Used `type JobSource = 'linkedin' | 'indeed' | 'glassdoor'` instead of `enum`
-   - **Why**: Better tree-shaking, simpler serialization (no reverse mappings), works naturally with JSON/MongoDB values
-   - **Impact**: Types are lightweight and don't generate runtime code
+   - Better tree-shaking, simpler serialization, works naturally with JSON/MongoDB
 
 2. **Comprehensive Utility Libraries from Day 1**
-   - **Choice**: Built validators and formatters alongside types, not later
-   - **Why**: Services will need these immediately — prevents duplicate implementations
-   - **Impact**: Every service gets battle-tested validation/formatting from shared package
+   - Prevents duplicate implementations across 5 services
 
 3. **Strict TypeScript Configuration**
-   - **Choice**: Enabled `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, `noUncheckedIndexedAccess`
-   - **Why**: Catches bugs at compile time, enforces clean code
-   - **Impact**: Higher code quality across all TypeScript services
+   - `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, `noUncheckedIndexedAccess`
 
 4. **Exports Map in package.json**
-   - **Choice**: Defined explicit export paths (`./types/job`, `./utils/validators`, etc.)
-   - **Why**: Enables tree-shaking and direct module imports
-   - **Impact**: Services can import only what they need
+   - Enables tree-shaking and direct module imports
 
-**Learnings**:
-
-1. **Type Design Mirrors Database Schema**
-   - Aligning TypeScript interfaces with MongoDB documents eliminates translation bugs
-   - Optional fields (`?`) map directly to nullable MongoDB fields
-   - Enum types enforce valid values at compile time before hitting DB validation
-
-2. **Validators and Formatters Are Essential Shared Code**
-   - Email regex, password rules, salary formatting — every service needs these
-   - Centralizing prevents 5 different implementations with 5 different bugs
-   - Functions are pure and stateless — easy to test, no side effects
-
-3. **Constants Prevent Magic Numbers**
-   - `CACHE_TTL.TRENDING_SKILLS` is self-documenting vs `900`
-   - Changing a value in one place updates all services
-   - Groups like `RATE_LIMITS`, `KAFKA_TOPICS`, `REDIS_KEYS` make configuration discoverable
-
-**Files Created**:
-```
-shared/
-├── index.ts                  # Barrel exports
-├── package.json              # Package config with exports map
-├── tsconfig.json             # Strict TS config
-├── README.md                 # Comprehensive docs with examples
-├── types/
-│   ├── job.ts               # Job posting types
-│   ├── skill.ts             # Skill & trend types
-│   ├── user.ts              # User & auth types
-│   └── analytics.ts         # Analytics types
-├── data/
-│   └── constants.ts         # Shared constants
-└── utils/
-    ├── validators.ts        # 13 validation functions
-    └── formatters.ts        # 17 formatting functions
-```
-
-**Commits**:
-```bash
-feat(shared): add TypeScript type definitions, validators, formatters, and constants
-
-Day 5 Complete: Shared Types Repository ✅ (3h)
-- 4 type files with 46+ interfaces/types
-- 13 validator functions with comprehensive coverage
-- 17 formatter functions for consistent display
-- Shared constants for all service configuration
-- Strict TypeScript setup with ES2022 target
-- Comprehensive README with usage examples
-```
-
-**Next**: Day 6 - Skill Taxonomy Data (500+ skills JSON)
+**Next**: Day 6 - Skill Taxonomy Data
 
 ---
 
@@ -376,14 +131,6 @@ Day 5 Complete: Shared Types Repository ✅ (3h)
 
 **Time**: 3 hours
 **Blockers**: None
-
-**What Was Built**:
-
-**`data/skill-taxonomy.json`** — The core data asset for the NLP service:
-- 503 skills with 1,441 total aliases
-- 9 categories covering the full technology landscape
-- Each skill includes `canonical`, `aliases`, `category`, `related` fields
-- Designed for NLP matching: aliases cover common abbreviations, capitalizations, and variations
 
 **Category Breakdown**:
 ```
@@ -398,139 +145,203 @@ testing:               31 skills (target: 20+)   ✅
 cloud_platform:        25 skills (target: 20+)   ✅
 ```
 
-**Coverage Highlights**:
-- **Languages**: From mainstream (Python, Java, Go) to niche (Zig, Nim, COBOL) — covers what real job postings mention
-- **Frameworks**: Full frontend (React, Vue, Svelte), backend (Express, Django, Spring Boot), ORMs (Prisma, SQLAlchemy), and mobile (Flutter, React Native)
-- **Databases**: Relational, NoSQL, time-series, vector DBs, data warehouses (Snowflake, BigQuery, Redshift)
-- **Cloud**: All 3 majors (AWS, Azure, GCP) plus specific services (Lambda, S3, EC2, ECS, EKS, RDS, SQS, SNS, CloudFormation)
-- **DevOps**: Complete CI/CD pipeline tooling, orchestration, service mesh, observability, security scanning
-- **ML/Data**: Deep learning frameworks, NLP tools, LLM ecosystem (LangChain, Hugging Face), MLOps, data engineering (Spark, Airflow, dbt)
-- **Testing**: Unit, integration, E2E, load, visual, mobile testing frameworks
-- **Soft Skills**: Technical (System Design, Code Review) and interpersonal (Leadership, Communication, Agile)
-- **Other**: Architecture patterns (DDD, CQRS, Saga), security (OWASP, OAuth, JWT), BI tools, GenAI/Prompt Engineering
+**Decisions Made**:
 
-**Alias Examples** (what NLP will match):
-```json
-"TypeScript" → ["typescript", "TS", "ts"]
-"React"      → ["react", "ReactJS", "React.js", "reactjs", "react.js", "React 18"]
-"AWS"        → ["aws", "Amazon Web Services", "amazon web services"]
-"scikit-learn" → ["sklearn", "scikit learn", "sci-kit learn", "scikitlearn"]
-"Kubernetes" → ["kubernetes", "K8s", "k8s", "Kube"]
-```
+1. **Flat JSON Structure (Not Nested by Category)** — Simpler to iterate, filter, search
+2. **Canonical Names as Primary Keys** — Human-readable, consistent with MongoDB `skill_id`
+3. **Generous Alias Coverage** — Average ~2.9 aliases per skill for high NLP accuracy
+4. **Added `testing` Category** — Split from devops/other, deserves first-class treatment
+5. **Related Skills Are Directional** — 3-7 per entry for "if you know X, consider Y" recommendations
 
-**Related Skills** (for recommendations & gap analysis):
-```json
-"React" → ["JavaScript", "TypeScript", "Next.js", "Redux", "React Router"]
-"Docker" → ["Kubernetes", "Containers", "Docker Compose", "Podman"]
-"Python" → ["Django", "Flask", "FastAPI", "NumPy", "Pandas", "PyTorch", "TensorFlow"]
-```
+**Next**: Day 7 - Scripts & Automation
 
-**Shared Types Updates**:
-- `types/skill.ts` — Added `'testing'` to `SkillCategory` union type, added `SkillTaxonomyEntry` interface for JSON loading, added `SkillTaxonomy` interface for full file structure
-- `data/constants.ts` — Added `'testing'` to `SKILL_CATEGORIES` constant array
+---
+
+#### Day 7: Scripts & Automation ✅
+**Completed**:
+- Created 5 bash scripts for full development workflow automation
+- Created Makefile with 40+ commands as the primary developer interface
+- All scripts pass bash syntax validation
+- Designed for WSL2 on Windows (primary dev environment)
+- Resolved WSL2 crash during testing
+
+**Time**: 2.5 hours
+**Blockers**: WSL2 crashed during `install.sh` testing (resolved with `wsl --shutdown`)
+
+**What Was Built**:
+
+**`scripts/install.sh`**:
+- Checks prerequisites: git, docker, bun, python3, go, make
+- Reports versions and missing tools with install instructions
+- Clones all 9 repos from GitHub org (or `--skip-clone` to pull existing)
+- Installs dependencies per language:
+  - Bun services: `bun install` (shared, scraper-service, api-gateway, frontend)
+  - Python services: creates `.venv`, `pip install -r requirements.txt` (nlp-service)
+  - Go services: `go mod download && go mod verify` (aggregation-service, auth-service)
+- Creates `.env` files from `.env.example` templates
+- Prints summary with install status per service
+
+**`scripts/dev.sh`**:
+- `--infra-only`: Starts Docker containers with health-wait polling
+- `--services-only`: Starts application services with PID tracking
+- Default: starts both infrastructure and services
+- Logs captured to `.logs/<service>.log`
+- PIDs tracked in `.pids/<service>.pid`
+- `--stop`: Graceful shutdown with SIGTERM, falls back to SIGKILL after 10s
+- `--service <name>`: Start a single service
+- Status display shows all services with port/PID/status
+
+**`scripts/test.sh`**:
+- Runs tests across all services, detects test files per language
+- `--coverage`: Generates coverage reports (bun coverage, pytest-cov, go cover)
+- `--watch`: Watch mode for iterative development
+- `--unit` / `--integration`: Filter by test type
+- `--service <name>`: Test single service
+- Summary with pass/fail/skip counts and timing
+- Returns proper exit code for CI
+
+**`scripts/lint.sh`**:
+- **Bun/TypeScript**: tsc --noEmit, ESLint, Prettier
+- **Python**: Ruff (replaces flake8+isort), MyPy, Black
+- **Go**: go vet, gofmt, golangci-lint, go mod tidy
+- `--fix`: Auto-fix where possible (Prettier write, Ruff fix, gofmt -w, go mod tidy)
+- `--check`: CI mode (no modifications)
+- `--service <name>`: Lint single service
+
+**`scripts/health-check.sh`**:
+- **Infrastructure**: Docker container state, port checks, HTTP health endpoints
+  - Redis: `redis-cli ping` via docker exec
+  - Elasticsearch: `/_cluster/health` endpoint
+  - Kibana: `/api/status` endpoint
+  - LocalStack: `/_localstack/health` endpoint
+  - Kafka/Zookeeper: port checks
+- **MongoDB Atlas**: Checks if `MONGODB_URI` is configured in `.env`
+- **Application services**: PID file check, port check, `/health` endpoint
+- `--json`: Machine-readable output for CI/monitoring
+- `--wait`: Poll until all healthy (configurable timeout, default 180s)
+- `--infra` / `--services`: Check specific layer only
+
+**`Makefile`**:
+- **Setup**: `install`, `install-skip-clone`, `setup-env`
+- **Development**: `dev`, `dev-infra`, `dev-services`, `stop`
+- **Docker**: `up`, `down`, `restart`, `logs`, `ps`, `clean`
+- **Testing**: `test`, `test-coverage`, `test-watch`, `test-unit`, `test-integration`
+- **Linting**: `lint`, `lint-fix`
+- **Health**: `health`, `health-infra`, `health-services`, `health-json`, `health-wait`
+- **Per-service**: `dev-scraper`, `test-nlp`, `lint-auth`, etc. (18 commands)
+- **Utilities**: `status`, `reset`, `deps-update`, `kibana`, `es`, `redis-cli`
+- `make help`: Auto-generated command reference from `##` comments
 
 **Decisions Made**:
 
-1. **Flat JSON Structure (Not Nested by Category)**
-   - **Choice**: Single `skills[]` array with `category` field, not `{ "programming_language": [...], "framework": [...] }`
-   - **Why**: Simpler to iterate, filter, and search. Services can group by category at runtime.
-   - **Impact**: One `Array.filter()` to get any category. NLP service doesn't need category hierarchy for matching.
+1. **Bash + Makefile (Not PowerShell)**
+   - **Choice**: Keep scripts as bash, run from WSL2
+   - **Why**: Bash is the standard for DevOps scripting, portable to CI/CD, Dockerfile, Linux servers
+   - **Trade-off**: Requires WSL2 on Windows (already available)
+   - **Impact**: Scripts work in GitHub Actions, Docker, and any Linux environment without modification
 
-2. **Canonical Names as Primary Keys**
-   - **Choice**: `"canonical": "React"` used as the skill identifier across all services
-   - **Why**: Human-readable, consistent with what gets stored in MongoDB, matches `skill_id` in trends
-   - **Impact**: No UUID mapping needed. When NLP matches "ReactJS" → returns "React" as canonical.
+2. **PID-Based Process Management**
+   - **Choice**: Track service PIDs in `.pids/` directory, logs in `.logs/`
+   - **Why**: Simple, no external tools needed (vs PM2, supervisord)
+   - **Trade-off**: Less robust than a process manager (no auto-restart)
+   - **Impact**: `dev.sh --stop` cleanly shuts down all services
 
-3. **Generous Alias Coverage**
-   - **Choice**: Average ~2.9 aliases per skill, including case variations and abbreviations
-   - **Why**: Job postings are inconsistent — "React.js", "ReactJS", "react" all mean the same thing
-   - **Impact**: Higher NLP extraction accuracy from day one. False negatives reduced significantly.
+3. **Makefile as Primary Interface**
+   - **Choice**: Makefile wraps all scripts as short commands
+   - **Why**: Universal (`make` is available everywhere), self-documenting with `make help`
+   - **Trade-off**: Makefile syntax is arcane, but users only run `make <command>`
+   - **Impact**: Developers only need to remember `make dev`, `make test`, `make health`
 
-4. **Added `testing` Category**
-   - **Choice**: Split testing tools out of `devops_tool` and `other` into dedicated category
-   - **Why**: Testing is a major skill category in job postings, deserves first-class treatment
-   - **Impact**: Updated `SkillCategory` type and `SKILL_CATEGORIES` constant across shared package
+4. **Language-Aware Tooling**
+   - **Choice**: Each script detects Bun/Python/Go and runs appropriate tools
+   - **Why**: Polyglot project (3 languages) needs unified interface
+   - **Impact**: `make test` runs bun test, pytest, and go test transparently
 
-5. **Related Skills Are Directional Suggestions, Not Exhaustive**
-   - **Choice**: 3-7 related skills per entry, covering the most common associations
-   - **Why**: Used for "if you know X, consider Y" recommendations — not a full dependency graph
-   - **Impact**: Enables skill gap analysis and "related skills" features in the frontend
+5. **Graceful Degradation**
+   - **Choice**: Missing tools warn but don't block, missing test files skip
+   - **Why**: Foundation phase has no source code yet — scripts must handle empty repos
+   - **Impact**: Scripts work now (with skips) and will light up as services are built
 
 **Learnings**:
 
-1. **Alias Design Matters for NLP Accuracy**
-   - Case variations are essential (job postings use inconsistent casing)
-   - Abbreviations are critical (nobody writes "Amazon Web Services" — they write "AWS")
-   - Version numbers help (React 18, Python3, Angular 2+)
-   - Common misspellings could be added later as we observe real data
+1. **WSL2 + Docker Desktop Can Be Fragile**
+   - Docker Desktop's WSL integration can crash the WSL VM
+   - Fix: `wsl --shutdown` then restart — works 90% of the time
+   - Fallback: `net stop LxssManager && net start LxssManager`
+   - Lesson: Always document WSL recovery steps for Windows developers
 
-2. **Taxonomy Will Evolve**
-   - New skills emerge constantly (e.g., Bun, Qwik were added — didn't exist 2 years ago)
-   - Version field in metadata enables tracking changes
-   - JSON format makes it easy to update without code changes
-   - Could eventually source from job data itself (discover new skills automatically)
+2. **Scripts Should Validate Before Executing**
+   - Checking prerequisites up front saves debugging time
+   - Checking for missing files (package.json, go.mod) prevents cryptic errors
+   - Color-coded output makes it easy to spot issues at a glance
 
-3. **503 Skills Covers ~95% of Job Postings**
-   - The long tail of niche skills can be added incrementally
-   - Categories are broad enough to classify anything
-   - `other` serves as catch-all for cross-cutting concerns
-   - Real-world testing with scraped data will reveal gaps
+3. **Automation Pays Off Immediately**
+   - Even before services exist, `make health-infra` validates Docker setup
+   - `make help` serves as a project onboarding guide
+   - Consistent interface across 3 languages reduces cognitive load
 
-**Files Created/Modified**:
+**Files Created**:
 ```
-shared/
-├── data/
-│   ├── skill-taxonomy.json   # NEW: 503 skills, 1,441 aliases
-│   └── constants.ts          # MODIFIED: added 'testing' to SKILL_CATEGORIES
-└── types/
-    └── skill.ts              # MODIFIED: added 'testing' to SkillCategory, added taxonomy interfaces
+infrastructure/
+├── Makefile
+└── scripts/
+    ├── install.sh              # Dependency installer
+    ├── dev.sh                  # Dev server manager
+    ├── test.sh                 # Test runner
+    ├── lint.sh                 # Lint runner
+    └── health-check.sh         # Health checker
 ```
 
 **Commits**:
 ```bash
-feat(shared): add skill taxonomy with 503 skills across 9 categories
+feat(infra): add automation scripts and Makefile
 
-Day 6 Complete: Skill Taxonomy Data ✅ (3h)
-- 503 skills with 1,441 aliases
-- 9 categories: programming_language, framework, database,
-  cloud_platform, devops_tool, ml_library, testing, soft_skill, other
-- Each skill includes canonical name, aliases, category, related skills
-- Updated SkillCategory type and SKILL_CATEGORIES constant to include 'testing'
-- Added SkillTaxonomy/SkillTaxonomyEntry interfaces for JSON loading
+Day 7 Complete: Scripts & Automation ✅ (2.5h)
+- install.sh: prerequisite checks, repo cloning, dependency installation
+- dev.sh: infrastructure + service startup with PID management
+- test.sh: cross-language test runner with coverage/watch modes
+- lint.sh: TypeScript/Python/Go linters with auto-fix support
+- health-check.sh: infrastructure + service health with JSON output
+- Makefile: 40+ commands for common development workflows
+- All scripts pass bash syntax validation
+- Designed for WSL2 on Windows
 ```
 
-**Next**: Day 7 - Scripts and Automation (install, test, deploy)
+**Next**: Day 8 - Scraper Service Bun.js project setup
 
 ---
 
-### Week 1 Progress Summary (through Day 6)
+### Week 1 Final Summary ✅
 
-**Days Completed**: 6/7 (86%)  
-**Time Spent**: 13.5 hours / 15-20 hours budgeted  
-**Pace**: Ahead of schedule ✅  
+**Days Completed**: 7/7 (100%)  
+**Total Time Spent**: ~16 hours  
+**Pace**: On schedule ✅  
+**Phase**: Foundation → Complete 🎉
 
-**Major Achievements**:
-- ✅ Full microservices organization (9 repos)
-- ✅ Complete infrastructure (6 services running)
-- ✅ Production-ready database with validation and indexes
-- ✅ Test data validated across all collections
-- ✅ Comprehensive shared type system with utilities
-- ✅ 503-skill taxonomy ready for NLP matching
-- ✅ Thorough documentation
+**What Was Built This Week**:
+
+| Day | Deliverable | Key Metric |
+|-----|-------------|------------|
+| 1 | GitHub org + 9 repos | 9 repositories |
+| 2 | Docker Compose infrastructure | 6 services running |
+| 3+4 | MongoDB Atlas + testing | 4 collections, 20+ indexes |
+| 5 | Shared TypeScript types | 46+ types, 30+ utilities |
+| 6 | Skill taxonomy | 503 skills, 1,441 aliases |
+| 7 | Automation scripts | 5 scripts + Makefile (2,277 lines) |
+
+**Foundation Assets Created**:
+- ✅ 9 GitHub repositories with documentation
+- ✅ 6 Docker infrastructure services (Kafka, Redis, Elasticsearch, Kibana, LocalStack, Zookeeper)
+- ✅ MongoDB Atlas cluster with 4 validated collections and 20+ indexes
+- ✅ 46+ TypeScript type definitions covering all services
+- ✅ 30+ shared utility functions (validators + formatters)
+- ✅ 503-skill taxonomy with 1,441 aliases for NLP matching
+- ✅ 5 automation scripts + Makefile with 40+ commands
+- ✅ Comprehensive documentation (architecture, work plan, decisions, conventions, progress, sprint notes)
 
 **Challenges Overcome**:
-- LocalStack Windows compatibility (Day 2) — solved with in-memory storage
-
-**Quality Indicators**:
-- All services have health checks ✅
-- Database has schema validation ✅
-- 20+ indexes verified with explain plans ✅
-- Test data in all collections ✅
-- Type safety across all services ✅
-- 30+ utility functions for validation/formatting ✅
-- 503 skills with 1,441 aliases for NLP ✅
-- Comprehensive documentation ✅
-- All issues tracked and resolved ✅
+1. LocalStack Windows volume issue (Day 2) — solved with in-memory storage
+2. WSL2 crash during script testing (Day 7) — solved with `wsl --shutdown`
 
 **Velocity Analysis**:
 - Day 1: 3h (on target)
@@ -538,22 +349,26 @@ Day 6 Complete: Skill Taxonomy Data ✅ (3h)
 - Day 3+4: 2h (combined, 2h under estimate)
 - Day 5: 3h (on target)
 - Day 6: 3h (on target)
-- **Average**: 2.25h per day vs 2-3h estimated
-- **Reason**: Good planning, efficient execution, no major blockers
+- Day 7: 2.5h (on target)
+- **Average**: 2.3h per day vs 2-3h estimated
+- **Total**: ~16h vs 15-20h budgeted
 
 **Technical Debt**: Zero 🎉
 
-**Remaining This Week**:
-- Day 7: Automation scripts (2-3h)
-
 **Key Success Factors**:
-1. Comprehensive planning (90-day work plan)
-2. Proper documentation (decisions, blockers, notes)
-3. No major technical issues
-4. Efficient execution (combined related tasks)
-5. Shared types + taxonomy established early — pays dividends during service implementation
+1. Comprehensive upfront planning (90-day work plan)
+2. Proper documentation at every step
+3. Efficient execution (combined Days 3+4)
+4. Early shared code (types + taxonomy) — prevents duplication in services
+5. Automation from day one — establishes workflow before complexity grows
+
+**What's Next**:
+- Week 2: Scraper Service (Bun.js) — Days 8-14
+- First real microservice with Kafka integration
+- First tests written against shared types
 
 ---
 
-**Last Updated**: Day 6 - 11/02/2026  
-**Next Sprint Notes**: End of Week 1 (Day 7)
+**Last Updated**: Day 7 - 12/02/2026  
+**Week 1**: ✅ Complete  
+**Next Sprint Notes**: Week 2 (Days 8-14) — Scraper Service
