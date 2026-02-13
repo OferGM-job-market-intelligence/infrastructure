@@ -1,16 +1,16 @@
 # Progress Tracker
 
-**Current**: Day 7 / 90 (7.8% complete)  
-**Week**: 1 / 15  
-**Phase**: Foundation → ✅ Complete  
-**Repository Structure**: Multi-repo (9 repositories)
+**Current**: Day 8 / 90 (8.9% complete)  
+**Week**: 2 / 15  
+**Phase**: Foundation → Scraper (transition)  
 
 ## 📊 Overall Status
 
 | Phase | Days | Status | Completion |
 |-------|------|--------|------------|
 | Foundation | 1-7 | ✅ Complete | 100% |
-| Scraper (Bun) | 8-14 | 🚧 Next | 0% |
+| CI/CD Templates | 8 | ✅ Complete | 100% |
+| Scraper (Bun) | 9-14 | ⏳ Pending | 0% |
 | NLP (Python) | 15-22 | ⏳ Pending | 0% |
 | Aggregation (Go) | 23-28 | ⏳ Pending | 0% |
 | Auth (Go) | 29-37 | ⏳ Pending | 0% |
@@ -136,24 +136,39 @@
 
 ---
 
-## 🚧 Up Next
 
-### Week 2: Scraper Service (Bun.js)
+### Week 2: CI/CD & Scraper Service
 
-#### Day 8: Bun.js Project Setup 🚧
-**Goal**: Initialize scraper-service with Bun, configure project structure  
-**Tasks**:
-- [ ] Initialize Bun project with TypeScript
-- [ ] Set up project structure (`src/`, `tests/`, `config/`)
-- [ ] Configure Kafka producer client
-- [ ] Configure Redis client
-- [ ] Configure MongoDB client
-- [ ] Create health check endpoint
-- [ ] Create Dockerfile
-- [ ] Link shared types package
+#### Day 8: CI/CD Pipeline Templates ✅ (3h)
+**Completed**:
+- ✅ Created 7 reusable workflow templates in `.github` repo:
+  - `template-format-and-lint.yml` — Biome/Ruff/gofmt + ESLint/Ruff/golangci-lint + tsc/mypy/go-vet
+  - `template-unit-tests.yml` — bun test / pytest / go test with coverage output
+  - `template-integration-tests.yml` — spins up Kafka, Redis, MongoDB, Elasticsearch service containers
+  - `template-code-coverage.yml` — coverage reports, GitHub Job Summary, configurable threshold gate (80%)
+  - `template-scan.yml` — gitleaks + pip-audit/npm-audit/govulncheck + Semgrep SAST + Trivy container scan
+  - `template-build.yml` — compile/bundle + Docker Buildx with GHCR push + GHA cache
+  - `template-deploy.yml` — Helm/kubectl deploy + health check + auto-rollback on failure
+- ✅ Created 3 thin caller workflows (one per language):
+  - `bunjs/ci.yml` — for scraper-service, api-gateway
+  - `python/ci.yml` — for nlp-service
+  - `go/ci.yml` — for aggregation-service, auth-service
+- ✅ Implemented  Managed Inheritance (template by reference via `workflow_call`)
+- ✅ Defined three-tier trigger strategy:
+  - Every push: formatAndLint + unitTests
+  - Pull requests: + codeCoverage + integrationTests + scan
+  - Push to main: + build + deploy
+- ✅ Documented progressive rollout plan (Week 2 → Week 15)
+- ✅ Updated DECISIONS.md with 5 new architectural decisions
 
-**Expected Time**: 2-3 hours  
-**Status**: Ready to start
+**Architecture Decision**: Managed Inheritance
+- 7 templates + 5 callers
+- Update one template → all services get the change instantly
+- Ref: Harness Pipeline Reuse Maturity Model
+
+**Time**: 3 hours  
+**Blockers**: None  
+**Next**: Begin scraper-service implementation (Bun.js setup, Kafka producer)
 
 ---
 
@@ -179,7 +194,8 @@
 - [x] **Day 4**: Database tested ✅
 - [x] **Day 5**: Shared types complete ✅
 - [x] **Day 6**: Skill taxonomy complete ✅
-- [x] **Day 7**: Foundation complete ✅ 🎉
+- [x] **Day 7**: Foundation complete ✅
+- [x] **Day 8**: CI/CD templates created ✅
 - [ ] **Day 14**: Jobs flowing to Kafka
 - [ ] **Day 22**: Skills extracted (85%+ accuracy)
 - [ ] **Day 28**: Trends calculating
@@ -200,10 +216,10 @@
 | Infrastructure Services | 6 | 6 | ✅ |
 | Database Collections | 4 | 4 | ✅ |
 | Database Indexes | 20+ | 20+ | ✅ |
-| Test Data | Comprehensive | 15 documents | ✅ |
 | Shared Types | Complete | 4 type files, 25+ utilities | ✅ |
 | Skill Taxonomy | 500+ skills | 503 skills, 1,441 aliases | ✅ |
-| Automation Scripts | Complete | 5 scripts + Makefile | ✅ |
+| CI/CD Templates | 7 | 7 | ✅ |
+| CI/CD Caller Workflows | 5 (1 per service) | 3 (1 per language) | ✅ |
 | Services Implemented | 5 | 0 | 🚧 |
 | Tests Written | 100+ | 0 | ⏳ |
 | Code Coverage | 80%+ | N/A | ⏳ |
@@ -240,7 +256,7 @@
 
 ---
 
-**Last Updated**: Day 7 - 12/02/2026  
-**Foundation Phase**: ✅ Complete (7/7 days)  
-**Total Time (Week 1)**: ~16 hours  
-**Next Phase**: Scraper Service (Day 8)
+**Last Updated**: Day 8 - 13/02/2026
+**Days Completed**: 8/90 (8.9%)
+**Week 2 Progress**: CI/CD foundation laid before service development ✅
+**Next Update**: Day 9 (scraper-service begins)

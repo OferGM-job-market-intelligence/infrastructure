@@ -369,6 +369,67 @@ Day 7 Complete: Scripts & Automation ✅ (2.5h)
 
 ---
 
-**Last Updated**: Day 7 - 12/02/2026  
-**Week 1**: ✅ Complete  
-**Next Sprint Notes**: Week 2 (Days 8-14) — Scraper Service
+## Week 2: CI/CD & Scraper Service (Days 8-14)
+
+### Goals
+- Set up centralized CI/CD pipeline templates before any service code
+- Begin scraper service implementation (Bun.js)
+- Establish code quality gates from the start
+
+### Daily Notes
+
+---
+
+#### Day 8: CI/CD Pipeline Templates ✅
+**Completed**:
+- Created 7 reusable workflow templates using GitHub Actions `workflow_call`
+- Created 3 language-specific caller workflows (Bun.js, Python, Go)
+- Implemented Managed Inheritance pattern (template by reference)
+- Defined three-tier trigger strategy (push / PR / main-only)
+- Documented progressive rollout plan
+
+**Time**: 3 hours
+
+**Key Decision: CI/CD Before Code**
+The original plan had CI/CD spread across Weeks 3, 6, 13, and 15. We moved it to Day 8 — right after Week 1 foundation and before writing any service code. Reasoning:
+- Every commit to scraper-service will be linted from day 1
+- Habits form early — developers never experience "no CI" as normal
+- Templates are language-agnostic, so they're ready for all 5 services
+- Progressive enablement means we don't need all jobs running yet
+
+**Key Decision: Managed Inheritance**
+Studied the Harness Pipeline Reuse Maturity Model and chose Level 4. The key insight: with 5 services in 3 languages, copy/paste YAML would create 35 files to maintain. A single scanner update would require 5 PRs. With managed inheritance, we maintain 7 templates and every service inherits changes automatically.
+
+**Key Decision: Three-Tier Triggers**
+Not all CI jobs should run on every event:
+- Fast feedback (every push): lint + unit tests (~2 min)
+- Quality gates (PRs): + coverage + integration tests + security scan (~8 min)  
+- Expensive/irreversible (main only): build Docker image + deploy (~5 min)
+
+This avoids wasting CI minutes on feature branches while ensuring nothing merges without full validation.
+
+**Templates Created**:
+| Template | Tools | Purpose |
+|----------|-------|---------|
+| format-and-lint | Biome/Ruff/gofmt, ESLint/Ruff/golangci-lint, tsc/mypy/go-vet | Code quality |
+| unit-tests | bun test / pytest / go test | Fast validation |
+| integration-tests | Kafka, Redis, MongoDB, ES containers | Infrastructure validation |
+| code-coverage | Coverage parsers + threshold gate | Coverage enforcement (80%) |
+| scan | gitleaks, pip-audit/govulncheck, Semgrep, Trivy | Security gates |
+| build | Bun build / py build / go build + Docker Buildx + GHCR | Artifact creation |
+| deploy | Helm/kubectl + health check + auto-rollback | K8s deployment |
+
+**Blockers**: None
+**Next**: Begin scraper-service Bun.js setup
+
+---
+
+### Week 2 Reflection (to be completed at end of week)
+- CI/CD established before writing service code — this is unusual for portfolio projects but mirrors enterprise practice
+- The Harness Maturity Model article was a helpful framework for justifying the approach
+- Template-by-reference means we won't hit the "Maintenance Wall" as the project grows
+
+---
+
+**Last Updated**: Day 8 - 13/02/2026
+**Next Sprint Notes**: End of Week 2 (Day 14)
