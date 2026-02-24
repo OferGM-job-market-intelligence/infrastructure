@@ -63,7 +63,7 @@ services:
     container_name: redis
     hostname: redis
     ports:
-      - "6380:6380"
+      - "6380:6379"
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - redis-data:/data

@@ -59,7 +59,7 @@ elasticsearch   docker.elastic.co/elasticsearch... Up (healthy)   0.0.0.0:9200->
 kafka           confluentinc/cp-kafka:7.5.0        Up (healthy)   0.0.0.0:9092->9092/tcp, 0.0.0.0:29092->29092/tcp
 kibana          docker.elastic.co/kibana...        Up (healthy)   0.0.0.0:5601->5601/tcp
 localstack      localstack/localstack:3.0          Up (healthy)   0.0.0.0:4566->4566/tcp
-redis           redis:7.2-alpine                   Up (healthy)   0.0.0.0:6380->6380/tcp
+redis           redis:7.2-alpine                   Up (healthy)   0.0.0.0:6380->6379/tcp
 zookeeper       confluentinc/cp-zookeeper:7.5.0    Up (healthy)   0.0.0.0:2181->2181/tcp
 ```
 
