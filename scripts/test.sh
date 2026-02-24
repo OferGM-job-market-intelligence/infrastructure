@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# test.sh — Run tests across all services
+# test.sh - Run tests across all services
 # =============================================================================
 # Usage:
 #   ./scripts/test.sh                      # Run all tests
@@ -133,7 +133,7 @@ run_tests_for_service() {
   TOTAL_SERVICES=$((TOTAL_SERVICES + 1))
 
   if [[ ! -d "$service_dir" ]]; then
-    log_warn "$service_name directory not found — skipping"
+    log_warn "$service_name directory not found - skipping"
     SKIPPED_SERVICES=$((SKIPPED_SERVICES + 1))
     return 0
   fi
@@ -164,7 +164,7 @@ run_tests_for_service() {
   esac
 
   if [[ "$has_tests" == false ]]; then
-    log_warn "$service_name has no test files — skipping"
+    log_warn "$service_name has no test files - skipping"
     SKIPPED_SERVICES=$((SKIPPED_SERVICES + 1))
     return 0
   fi
@@ -217,13 +217,13 @@ run_tests_for_service() {
     local end_time
     end_time=$(date +%s)
     local duration=$((end_time - start_time))
-    log_success "$service_name — all tests passed (${duration}s)"
+    log_success "$service_name - all tests passed (${duration}s)"
     PASSED_SERVICES=$((PASSED_SERVICES + 1))
   else
     local end_time
     end_time=$(date +%s)
     local duration=$((end_time - start_time))
-    log_fail "$service_name — tests failed (${duration}s)"
+    log_fail "$service_name - tests failed (${duration}s)"
     FAILED_SERVICES=$((FAILED_SERVICES + 1))
     FAILED_LIST+=("$service_name")
   fi
@@ -285,7 +285,7 @@ print_summary() {
 main() {
   echo ""
   echo -e "${BOLD}${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${BOLD}${CYAN}║   Job Market Intelligence — Test Runner                   ║${NC}"
+  echo -e "${BOLD}${CYAN}║   Job Market Intelligence - Test Runner                   ║${NC}"
   echo -e "${BOLD}${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
   echo ""
 

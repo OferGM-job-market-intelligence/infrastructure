@@ -93,16 +93,16 @@ The original plan separated MongoDB setup (Day 3) from testing (Day 4), but I co
 **What Was Built**:
 
 **Type Definitions (4 files)**:
-- `types/job.ts` — 10 types/interfaces covering job postings, search, and statistics
-- `types/skill.ts` — 12 types/interfaces for skill taxonomy and trend analysis
-- `types/user.ts` — 14 types/interfaces for auth and user management
-- `types/analytics.ts` — 10 types/interfaces for market analytics
+- `types/job.ts` - 10 types/interfaces covering job postings, search, and statistics
+- `types/skill.ts` - 12 types/interfaces for skill taxonomy and trend analysis
+- `types/user.ts` - 14 types/interfaces for auth and user management
+- `types/analytics.ts` - 10 types/interfaces for market analytics
 
 **Constants (`data/constants.ts`)**: Rate limits, JWT expiry, cache TTLs, Kafka topics, Redis keys, password requirements, HTTP status codes, error codes, service ports
 
-**Validators (`utils/validators.ts`)**: 13 functions — email, password, URL, job ID, salary range, date range, pagination, ObjectId, etc.
+**Validators (`utils/validators.ts`)**: 13 functions - email, password, URL, job ID, salary range, date range, pagination, ObjectId, etc.
 
-**Formatters (`utils/formatters.ts`)**: 17 functions — salary, date, relative time, number, percentage, location, experience level, job source, skill name, trend direction
+**Formatters (`utils/formatters.ts`)**: 17 functions - salary, date, relative time, number, percentage, location, experience level, job source, skill name, trend direction
 
 **Decisions Made**:
 
@@ -147,11 +147,11 @@ cloud_platform:        25 skills (target: 20+)   ✅
 
 **Decisions Made**:
 
-1. **Flat JSON Structure (Not Nested by Category)** — Simpler to iterate, filter, search
-2. **Canonical Names as Primary Keys** — Human-readable, consistent with MongoDB `skill_id`
-3. **Generous Alias Coverage** — Average ~2.9 aliases per skill for high NLP accuracy
-4. **Added `testing` Category** — Split from devops/other, deserves first-class treatment
-5. **Related Skills Are Directional** — 3-7 per entry for "if you know X, consider Y" recommendations
+1. **Flat JSON Structure (Not Nested by Category)** - Simpler to iterate, filter, search
+2. **Canonical Names as Primary Keys** - Human-readable, consistent with MongoDB `skill_id`
+3. **Generous Alias Coverage** - Average ~2.9 aliases per skill for high NLP accuracy
+4. **Added `testing` Category** - Split from devops/other, deserves first-class treatment
+5. **Related Skills Are Directional** - 3-7 per entry for "if you know X, consider Y" recommendations
 
 **Next**: Day 7 - Scripts & Automation
 
@@ -259,14 +259,14 @@ cloud_platform:        25 skills (target: 20+)   ✅
 
 5. **Graceful Degradation**
    - **Choice**: Missing tools warn but don't block, missing test files skip
-   - **Why**: Foundation phase has no source code yet — scripts must handle empty repos
+   - **Why**: Foundation phase has no source code yet - scripts must handle empty repos
    - **Impact**: Scripts work now (with skips) and will light up as services are built
 
 **Learnings**:
 
 1. **WSL2 + Docker Desktop Can Be Fragile**
    - Docker Desktop's WSL integration can crash the WSL VM
-   - Fix: `wsl --shutdown` then restart — works 90% of the time
+   - Fix: `wsl --shutdown` then restart - works 90% of the time
    - Fallback: `net stop LxssManager && net start LxssManager`
    - Lesson: Always document WSL recovery steps for Windows developers
 
@@ -340,8 +340,8 @@ Day 7 Complete: Scripts & Automation ✅ (2.5h)
 - ✅ Comprehensive documentation (architecture, work plan, decisions, conventions, progress, sprint notes)
 
 **Challenges Overcome**:
-1. LocalStack Windows volume issue (Day 2) — solved with in-memory storage
-2. WSL2 crash during script testing (Day 7) — solved with `wsl --shutdown`
+1. LocalStack Windows volume issue (Day 2) - solved with in-memory storage
+2. WSL2 crash during script testing (Day 7) - solved with `wsl --shutdown`
 
 **Velocity Analysis**:
 - Day 1: 3h (on target)
@@ -359,11 +359,11 @@ Day 7 Complete: Scripts & Automation ✅ (2.5h)
 1. Comprehensive upfront planning (90-day work plan)
 2. Proper documentation at every step
 3. Efficient execution (combined Days 3+4)
-4. Early shared code (types + taxonomy) — prevents duplication in services
-5. Automation from day one — establishes workflow before complexity grows
+4. Early shared code (types + taxonomy) - prevents duplication in services
+5. Automation from day one - establishes workflow before complexity grows
 
 **What's Next**:
-- Week 2: Scraper Service (Bun.js) — Days 8-14
+- Week 2: Scraper Service (Bun.js) - Days 8-14
 - First real microservice with Kafka integration
 - First tests written against shared types
 
@@ -387,13 +387,18 @@ Day 7 Complete: Scripts & Automation ✅ (2.5h)
 - Implemented Managed Inheritance pattern (template by reference)
 - Defined three-tier trigger strategy (push / PR / main-only)
 - Documented progressive rollout plan
+- Fully scaffolded the scraper-service with production-ready module architecture
+- Added all runtime dependencies (kafkajs, ioredis, cheerio, axios, zod)
+- Created Zod-validated config, structured logger, Kafka producer, Redis client, rate limiter
+- Created abstract BaseScraper with full pipeline logic
+- Entry point with health server, graceful shutdown, and recurring scheduler
 
-**Time**: 3 hours
+**Time**: 6 hours
 
 **Key Decision: CI/CD Before Code**
-The original plan had CI/CD spread across Weeks 3, 6, 13, and 15. We moved it to Day 8 — right after Week 1 foundation and before writing any service code. Reasoning:
+The original plan had CI/CD spread across Weeks 3, 6, 13, and 15. We moved it to Day 8 - right after Week 1 foundation and before writing any service code. Reasoning:
 - Every commit to scraper-service will be linted from day 1
-- Habits form early — developers never experience "no CI" as normal
+- Habits form early - developers never experience "no CI" as normal
 - Templates are language-agnostic, so they're ready for all 5 services
 - Progressive enablement means we don't need all jobs running yet
 
@@ -420,12 +425,75 @@ This avoids wasting CI minutes on feature branches while ensuring nothing merges
 | deploy | Helm/kubectl + health check + auto-rollback | K8s deployment |
 
 **Blockers**: None
+
+**What Was Built**:
+
+**Directory Structure**:
+```
+scraper-service/
+├── .env.example              # All env vars documented
+├── .gitignore
+├── eslint.config.ts          # ESLint flat config (TS + Bun)
+├── package.json              # Updated with runtime deps
+├── tsconfig.json             # Strict TS config, Bun types
+├── src/
+│   ├── index.ts              # Entry point: health server + scheduler + shutdown
+│   ├── config/
+│   │   └── env.ts            # Zod-validated env config (fail-fast)
+│   ├── kafka/
+│   │   └── producer.ts       # KafkaJS producer (idempotent, GZIP, batch)
+│   ├── redis/
+│   │   └── client.ts         # ioredis singleton + dedup helpers
+│   ├── scrapers/
+│   │   ├── index.ts          # Scraper registry + factory
+│   │   ├── base-scraper.ts   # Abstract class: rate limit → scrape → dedup → publish
+│   │   ├── linkedin-scraper.ts  # Placeholder (Day 11)
+│   │   └── indeed-scraper.ts    # Placeholder (Day 13)
+│   └── utils/
+│       ├── logger.ts         # Structured JSON logger + child loggers
+│       └── rate-limiter.ts   # Redis INCR sliding window
+└── tests/
+    └── config.test.ts        # Zod schema validation tests
+```
+
+**Key Architecture Decisions**:
+
+1. **Zod for Config Validation**
+   - **Choice**: Validate all environment variables at startup with Zod schemas
+   - **Why**: Fail fast instead of discovering bad config mid-execution. Zod provides defaults, coercion (string → number), and descriptive error messages
+   - **Impact**: If REDIS_PORT is set to "abc", the service crashes immediately with a clear message instead of failing later on connection
+
+2. **Fail-Open on Redis Errors**
+   - **Choice**: Rate limiter and dedup checks return permissive defaults when Redis is down
+   - **Why**: Redis is a caching/rate-limiting layer, not the source of truth. Blocking scraping because Redis is temporarily unavailable is worse than temporarily exceeding rate limits or re-scraping a duplicate
+   - **Impact**: Service degrades gracefully instead of halting entirely
+
+3. **Idempotent Kafka Producer**
+   - **Choice**: Set `idempotent: true` on the KafkaJS producer
+   - **Why**: Prevents duplicate messages if the producer retries after a timeout. Combined with job_id as the message key, ensures exactly-once semantics within a session
+   - **Impact**: NLP service won't process the same job twice due to producer retries
+
+4. **Abstract BaseScraper with Pipeline Pattern**
+   - **Choice**: Template Method pattern - BaseScraper.run() orchestrates the pipeline, concrete scrapers only implement scrape()
+   - **Why**: Rate limiting, dedup, publishing, and error handling are identical across sources. Only the HTML parsing differs
+   - **Impact**: Adding a new source (e.g., Glassdoor) requires only implementing one async method
+
+5. **Health Server on Port 3000**
+   - **Choice**: Built-in Bun.serve() for `/health` endpoint
+   - **Why**: Docker HEALTHCHECK and Kubernetes liveness/readiness probes need an HTTP endpoint. Reports Redis status and registered scrapers
+   - **Impact**: Infrastructure can detect unhealthy instances and restart them
+
+6. **Structured JSON Logging**
+   - **Choice**: Custom logger outputting JSON lines to stdout/stderr
+   - **Why**: Elasticsearch/Kibana (our observability stack) natively ingests JSON. Child loggers add consistent context (scraper name, source) without repeating it in every call
+   - **Impact**: Every log line is machine-parseable and includes service name, timestamp, and level
+
 **Next**: Begin scraper-service Bun.js setup
 
 ---
 
 ### Week 2 Reflection (to be completed at end of week)
-- CI/CD established before writing service code — this is unusual for portfolio projects but mirrors enterprise practice
+- CI/CD established before writing service code - this is unusual for portfolio projects but mirrors enterprise practice
 - The Harness Maturity Model article was a helpful framework for justifying the approach
 - Template-by-reference means we won't hit the "Maintenance Wall" as the project grows
 

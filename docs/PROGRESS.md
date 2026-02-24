@@ -89,13 +89,13 @@
 
 #### Day 5: Shared Types Repository ✅ (3h)
 **Completed**:
-- ✅ Created `types/job.ts` — JobPosting, Location, Salary, Company, JobSearchFilters, JobSearchResults, JobStats
-- ✅ Created `types/skill.ts` — Skill, SkillTrend, SkillWithTrends, TrendingSkills, SkillGap, SkillExtractionResult, SkillComparison
-- ✅ Created `types/user.ts` — User, UserPublic, UserProfile, UserPreferences, TokenPair, JWTPayload, LoginRequest, SignupRequest, AuthResponse, Session
-- ✅ Created `types/analytics.ts` — SalaryStats, MarketInsights, DashboardStats, SkillDemandAnalysis, TimeSeriesDataPoint, ExportData
-- ✅ Created `data/constants.ts` — Rate limits, token expiry, cache TTLs, Kafka topics, Redis keys, password requirements, HTTP status codes, error codes, service ports
-- ✅ Created `utils/validators.ts` — 13 validation functions
-- ✅ Created `utils/formatters.ts` — 17 formatting functions
+- ✅ Created `types/job.ts` - JobPosting, Location, Salary, Company, JobSearchFilters, JobSearchResults, JobStats
+- ✅ Created `types/skill.ts` - Skill, SkillTrend, SkillWithTrends, TrendingSkills, SkillGap, SkillExtractionResult, SkillComparison
+- ✅ Created `types/user.ts` - User, UserPublic, UserProfile, UserPreferences, TokenPair, JWTPayload, LoginRequest, SignupRequest, AuthResponse, Session
+- ✅ Created `types/analytics.ts` - SalaryStats, MarketInsights, DashboardStats, SkillDemandAnalysis, TimeSeriesDataPoint, ExportData
+- ✅ Created `data/constants.ts` - Rate limits, token expiry, cache TTLs, Kafka topics, Redis keys, password requirements, HTTP status codes, error codes, service ports
+- ✅ Created `utils/validators.ts` - 13 validation functions
+- ✅ Created `utils/formatters.ts` - 17 formatting functions
 - ✅ Created `index.ts`, `tsconfig.json`, `package.json` with exports map
 - ✅ Created comprehensive `README.md`
 
@@ -111,8 +111,8 @@
 - ✅ Programming Languages: 50 | Frameworks: 106 | Databases: 32
 - ✅ Cloud Platforms: 25 | DevOps Tools: 52 | ML & Data Science: 53
 - ✅ Testing: 31 | Soft Skills: 52 | Other: 102
-- ✅ Updated `types/skill.ts` — Added `'testing'` to `SkillCategory`, added `SkillTaxonomyEntry` and `SkillTaxonomy` interfaces
-- ✅ Updated `data/constants.ts` — Added `'testing'` to `SKILL_CATEGORIES` array
+- ✅ Updated `types/skill.ts` - Added `'testing'` to `SkillCategory`, added `SkillTaxonomyEntry` and `SkillTaxonomy` interfaces
+- ✅ Updated `data/constants.ts` - Added `'testing'` to `SKILL_CATEGORIES` array
 
 **Time**: 3 hours  
 **Blockers**: None
@@ -121,12 +121,12 @@
 
 #### Day 7: Scripts & Automation ✅ (2.5h)
 **Completed**:
-- ✅ Created `scripts/install.sh` — Prerequisite checks (git, docker, bun, python3, go), repo cloning, per-language dependency installation (Bun/Python venv/Go mod), .env setup
-- ✅ Created `scripts/dev.sh` — Docker infrastructure startup with health-wait, application service startup with PID tracking, log capture to `.logs/`, `--stop` for clean shutdown
-- ✅ Created `scripts/test.sh` — Cross-language test runner with `--coverage`, `--watch`, `--unit`/`--integration` flags, per-service or all-services mode
-- ✅ Created `scripts/lint.sh` — TypeScript (tsc/ESLint/Prettier), Python (Ruff/MyPy/Black), Go (go vet/gofmt/golangci-lint) with `--fix` auto-correction
-- ✅ Created `scripts/health-check.sh` — Docker container checks, port checks, HTTP endpoint health, MongoDB config check, `--json` output, `--wait` polling mode
-- ✅ Created `Makefile` — 40+ commands organized by category (setup, dev, test, lint, health, individual services, utilities)
+- ✅ Created `scripts/install.sh` - Prerequisite checks (git, docker, bun, python3, go), repo cloning, per-language dependency installation (Bun/Python venv/Go mod), .env setup
+- ✅ Created `scripts/dev.sh` - Docker infrastructure startup with health-wait, application service startup with PID tracking, log capture to `.logs/`, `--stop` for clean shutdown
+- ✅ Created `scripts/test.sh` - Cross-language test runner with `--coverage`, `--watch`, `--unit`/`--integration` flags, per-service or all-services mode
+- ✅ Created `scripts/lint.sh` - TypeScript (tsc/ESLint/Prettier), Python (Ruff/MyPy/Black), Go (go vet/gofmt/golangci-lint) with `--fix` auto-correction
+- ✅ Created `scripts/health-check.sh` - Docker container checks, port checks, HTTP endpoint health, MongoDB config check, `--json` output, `--wait` polling mode
+- ✅ Created `Makefile` - 40+ commands organized by category (setup, dev, test, lint, health, individual services, utilities)
 - ✅ All scripts pass bash syntax validation
 - ✅ Scripts designed for WSL2 on Windows (primary dev environment)
 
@@ -142,17 +142,17 @@
 #### Day 8: CI/CD Pipeline Templates ✅ (3h)
 **Completed**:
 - ✅ Created 7 reusable workflow templates in `.github` repo:
-  - `template-format-and-lint.yml` — Biome/Ruff/gofmt + ESLint/Ruff/golangci-lint + tsc/mypy/go-vet
-  - `template-unit-tests.yml` — bun test / pytest / go test with coverage output
-  - `template-integration-tests.yml` — spins up Kafka, Redis, MongoDB, Elasticsearch service containers
-  - `template-code-coverage.yml` — coverage reports, GitHub Job Summary, configurable threshold gate (80%)
-  - `template-scan.yml` — gitleaks + pip-audit/npm-audit/govulncheck + Semgrep SAST + Trivy container scan
-  - `template-build.yml` — compile/bundle + Docker Buildx with GHCR push + GHA cache
-  - `template-deploy.yml` — Helm/kubectl deploy + health check + auto-rollback on failure
+  - `template-format-and-lint.yml` - Biome/Ruff/gofmt + ESLint/Ruff/golangci-lint + tsc/mypy/go-vet
+  - `template-unit-tests.yml` - bun test / pytest / go test with coverage output
+  - `template-integration-tests.yml` - spins up Kafka, Redis, MongoDB, Elasticsearch service containers
+  - `template-code-coverage.yml` - coverage reports, GitHub Job Summary, configurable threshold gate (80%)
+  - `template-scan.yml` - gitleaks + pip-audit/npm-audit/govulncheck + Semgrep SAST + Trivy container scan
+  - `template-build.yml` - compile/bundle + Docker Buildx with GHCR push + GHA cache
+  - `template-deploy.yml` - Helm/kubectl deploy + health check + auto-rollback on failure
 - ✅ Created 3 thin caller workflows (one per language):
-  - `bunjs/ci.yml` — for scraper-service, api-gateway
-  - `python/ci.yml` — for nlp-service
-  - `go/ci.yml` — for aggregation-service, auth-service
+  - `bunjs/ci.yml` - for scraper-service, api-gateway
+  - `python/ci.yml` - for nlp-service
+  - `go/ci.yml` - for aggregation-service, auth-service
 - ✅ Implemented  Managed Inheritance (template by reference via `workflow_call`)
 - ✅ Defined three-tier trigger strategy:
   - Every push: formatAndLint + unitTests
@@ -160,15 +160,29 @@
   - Push to main: + build + deploy
 - ✅ Documented progressive rollout plan (Week 2 → Week 15)
 - ✅ Updated DECISIONS.md with 5 new architectural decisions
+- ✅ Added runtime dependencies: kafkajs, ioredis, cheerio, axios, zod
+- ✅ Created strict tsconfig.json (ES2022, bundler resolution, Bun types)
+- ✅ Created Zod-validated config module (fails fast on bad env vars)
+- ✅ Created structured JSON logger (child loggers, level filtering)
+- ✅ Created Kafka producer (idempotent, GZIP compression, batch support)
+- ✅ Created Redis client (singleton, dedup helpers, health check)
+- ✅ Created rate limiter (Redis INCR + sliding window, fail-open)
+- ✅ Created abstract BaseScraper class (full pipeline: rate limit → scrape → dedup → publish)
+- ✅ Scaffolded LinkedIn + Indeed scrapers (extending BaseScraper)
+- ✅ Created main entry point (health server, scheduler, graceful shutdown)
+- ✅ Created .env.example with all config vars documented
+- ✅ Created ESLint flat config (TypeScript + Bun, no-console rule)
+- ✅ Created Prettier config + ignore
+- ✅ Created unit tests for config schema validation
 
 **Architecture Decision**: Managed Inheritance
 - 7 templates + 5 callers
 - Update one template → all services get the change instantly
 - Ref: Harness Pipeline Reuse Maturity Model
 
-**Time**: 3 hours  
+**Time**: 6 hours  
 **Blockers**: None  
-**Next**: Begin scraper-service implementation (Bun.js setup, Kafka producer)
+**Next**: Day 9 - Kafka & Redis Integration Testing
 
 ---
 

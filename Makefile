@@ -1,14 +1,14 @@
 # =============================================================================
-# Makefile — Job Market Intelligence Platform
+# Makefile - Job Market Intelligence Platform
 # =============================================================================
 # Quick reference:
-#   make install     — Install all dependencies
-#   make dev         — Start everything (infra + services)
-#   make test        — Run all tests
-#   make lint        — Lint all services
-#   make health      — Health check everything
-#   make stop        — Stop everything
-#   make help        — Show all available commands
+#   make install     - Install all dependencies
+#   make dev         - Start everything (infra + services)
+#   make test        - Run all tests
+#   make lint        - Lint all services
+#   make health      - Health check everything
+#   make stop        - Stop everything
+#   make help        - Show all available commands
 # =============================================================================
 
 .DEFAULT_GOAL := help
@@ -316,7 +316,7 @@ redis-cli: ## Open Redis CLI
 help: ## Show this help message
 	@echo ""
 	@echo -e "$(BOLD)$(CYAN)╔═══════════════════════════════════════════════════════════╗$(NC)"
-	@echo -e "$(BOLD)$(CYAN)║   Job Market Intelligence — Available Commands            ║$(NC)"
+	@echo -e "$(BOLD)$(CYAN)║   Job Market Intelligence - Available Commands            ║$(NC)"
 	@echo -e "$(BOLD)$(CYAN)╚═══════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
 	@awk 'BEGIN {FS = ":.*##"} \

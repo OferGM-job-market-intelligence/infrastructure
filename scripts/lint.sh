@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# lint.sh — Run linters and formatters across all services
+# lint.sh - Run linters and formatters across all services
 # =============================================================================
 # Usage:
 #   ./scripts/lint.sh                       # Lint all services
@@ -93,7 +93,7 @@ lint_bun_service() {
   TOTAL=$((TOTAL + 1))
 
   if [[ ! -f "$service_dir/package.json" ]]; then
-    log_warn "$service_name has no package.json — skipping"
+    log_warn "$service_name has no package.json - skipping"
     SKIPPED=$((SKIPPED + 1))
     return 0
   fi
@@ -129,7 +129,7 @@ lint_bun_service() {
       exit_code=1
     fi
   else
-    log_info "  No ESLint config found — skipping ESLint"
+    log_info "  No ESLint config found - skipping ESLint"
   fi
 
   # Prettier (if configured)
@@ -240,7 +240,7 @@ lint_go_service() {
   TOTAL=$((TOTAL + 1))
 
   if [[ ! -f "$service_dir/go.mod" ]]; then
-    log_warn "$service_name has no go.mod — skipping"
+    log_warn "$service_name has no go.mod - skipping"
     SKIPPED=$((SKIPPED + 1))
     return 0
   fi
@@ -289,7 +289,7 @@ lint_go_service() {
       exit_code=1
     fi
   else
-    log_info "  golangci-lint not installed — skipping (install: https://golangci-lint.run/)"
+    log_info "  golangci-lint not installed - skipping (install: https://golangci-lint.run/)"
   fi
 
   # go mod tidy check
@@ -325,7 +325,7 @@ lint_service() {
   local lang="${SERVICE_LANG[$service_name]:-}"
 
   if [[ ! -d "$service_dir" ]]; then
-    log_warn "$service_name directory not found — skipping"
+    log_warn "$service_name directory not found - skipping"
     SKIPPED=$((SKIPPED + 1))
     TOTAL=$((TOTAL + 1))
     return 0
@@ -376,7 +376,7 @@ print_summary() {
 main() {
   echo ""
   echo -e "${BOLD}${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${BOLD}${CYAN}║   Job Market Intelligence — Lint Runner                   ║${NC}"
+  echo -e "${BOLD}${CYAN}║   Job Market Intelligence - Lint Runner                   ║${NC}"
   echo -e "${BOLD}${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
   echo ""
 

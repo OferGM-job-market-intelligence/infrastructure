@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# health-check.sh — Verify all infrastructure and services are running
+# health-check.sh - Verify all infrastructure and services are running
 # =============================================================================
 # Usage:
 #   ./scripts/health-check.sh             # Check everything
@@ -184,7 +184,7 @@ check_infrastructure() {
     TOTAL_CHECKS=$((TOTAL_CHECKS + 1))
 
     # Check container status
-    local container_status="—"
+    local container_status="-"
     if check_docker_container "$service_name"; then
       container_status="${GREEN}running${NC}"
     else
@@ -192,7 +192,7 @@ check_infrastructure() {
     fi
 
     # Check port accessibility
-    local port_status="—"
+    local port_status="-"
     if check_port "$port"; then
       port_status="${GREEN}open${NC}"
     else
@@ -200,7 +200,7 @@ check_infrastructure() {
     fi
 
     # Check health endpoint (if available)
-    local health_status="—"
+    local health_status="-"
     local endpoint="${INFRA_HEALTH[$service_name]:-}"
     if [[ -n "$endpoint" ]]; then
       if [[ "$endpoint" == http* ]]; then
@@ -225,7 +225,7 @@ check_infrastructure() {
         fi
       fi
     else
-      # No health endpoint — use port check as indicator
+      # No health endpoint - use port check as indicator
       if check_port "$port"; then
         HEALTHY_COUNT=$((HEALTHY_COUNT + 1))
         RESULTS[$service_name]="healthy"
@@ -252,7 +252,7 @@ check_app_services() {
     TOTAL_CHECKS=$((TOTAL_CHECKS + 1))
 
     # Check PID file
-    local process_status="—"
+    local process_status="-"
     if [[ -f "$PID_DIR/$service_name.pid" ]]; then
       local pid
       pid=$(cat "$PID_DIR/$service_name.pid")
@@ -266,7 +266,7 @@ check_app_services() {
     fi
 
     # Check port
-    local port_status="—"
+    local port_status="-"
     if check_port "$port"; then
       port_status="${GREEN}open${NC}"
     else
@@ -274,7 +274,7 @@ check_app_services() {
     fi
 
     # Check health endpoint
-    local health_status="—"
+    local health_status="-"
     local endpoint="${APP_HEALTH[$service_name]:-}"
     if [[ -n "$endpoint" ]]; then
       if check_http_endpoint "$endpoint" 3; then
@@ -363,7 +363,7 @@ wait_for_healthy() {
       return 0
     fi
 
-    log_info "  ${HEALTHY_COUNT}/${TOTAL_CHECKS} healthy — waiting... (${elapsed}s / ${WAIT_TIMEOUT}s)"
+    log_info "  ${HEALTHY_COUNT}/${TOTAL_CHECKS} healthy - waiting... (${elapsed}s / ${WAIT_TIMEOUT}s)"
     sleep "$interval"
     elapsed=$((elapsed + interval))
   done
@@ -450,7 +450,7 @@ main() {
   if [[ "$JSON_OUTPUT" != true ]]; then
     echo ""
     echo -e "${BOLD}${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BOLD}${CYAN}║   Job Market Intelligence — Health Check                  ║${NC}"
+    echo -e "${BOLD}${CYAN}║   Job Market Intelligence - Health Check                  ║${NC}"
     echo -e "${BOLD}${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
     echo ""
   fi

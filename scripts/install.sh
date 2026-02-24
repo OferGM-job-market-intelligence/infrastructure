@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# install.sh — Install all service dependencies for Job Market Intelligence
+# install.sh - Install all service dependencies for Job Market Intelligence
 # =============================================================================
 # Usage:
 #   ./scripts/install.sh              # Install everything
@@ -136,7 +136,7 @@ check_prerequisites() {
     log_success "bun $(bun --version)"
   else
     missing+=("bun")
-    log_warn "bun not found — required for scraper-service, api-gateway, shared, frontend"
+    log_warn "bun not found - required for scraper-service, api-gateway, shared, frontend"
     log_info "  Install: curl -fsSL https://bun.sh/install | bash"
   fi
 
@@ -145,7 +145,7 @@ check_prerequisites() {
     log_success "python3 $(python3 --version | awk '{print $2}')"
   else
     missing+=("python3")
-    log_warn "python3 not found — required for nlp-service"
+    log_warn "python3 not found - required for nlp-service"
   fi
 
   # pip
@@ -153,7 +153,7 @@ check_prerequisites() {
     log_success "pip3 available"
   else
     missing+=("pip3")
-    log_warn "pip3 not found — required for nlp-service"
+    log_warn "pip3 not found - required for nlp-service"
   fi
 
   # Go (for aggregation and auth services)
@@ -161,7 +161,7 @@ check_prerequisites() {
     log_success "go $(go version | awk '{print $3}' | tr -d 'go')"
   else
     missing+=("go")
-    log_warn "go not found — required for aggregation-service, auth-service"
+    log_warn "go not found - required for aggregation-service, auth-service"
     log_info "  Install: https://go.dev/dl/"
   fi
 
@@ -169,7 +169,7 @@ check_prerequisites() {
   if command -v make &>/dev/null; then
     log_success "make available"
   else
-    log_warn "make not found — optional, used for Makefile shortcuts"
+    log_warn "make not found - optional, used for Makefile shortcuts"
   fi
 
   if [[ ${#missing[@]} -gt 0 ]]; then
@@ -197,7 +197,7 @@ clone_repos() {
 
   for repo in "${REPOS[@]}"; do
     if [[ -d "$repo" ]]; then
-      log_info "$repo already exists — pulling latest..."
+      log_info "$repo already exists - pulling latest..."
       (cd "$repo" && git pull --quiet 2>/dev/null) && log_success "$repo updated" || log_warn "$repo pull failed (may have uncommitted changes)"
     else
       log_info "Cloning $repo..."
@@ -218,7 +218,7 @@ install_bun_service() {
   local service_name="$(basename "$service_dir")"
 
   if [[ ! -f "$service_dir/package.json" ]]; then
-    log_warn "$service_name has no package.json — skipping"
+    log_warn "$service_name has no package.json - skipping"
     return 0
   fi
 
@@ -256,7 +256,7 @@ install_python_service() {
       && log_success "$service_name dependencies installed" \
       || log_error "$service_name pip install failed"
   else
-    log_warn "$service_name has no requirements.txt or pyproject.toml — skipping"
+    log_warn "$service_name has no requirements.txt or pyproject.toml - skipping"
   fi
 
   deactivate 2>/dev/null || true
@@ -270,7 +270,7 @@ install_go_service() {
   local service_name="$(basename "$service_dir")"
 
   if [[ ! -f "$service_dir/go.mod" ]]; then
-    log_warn "$service_name has no go.mod — skipping"
+    log_warn "$service_name has no go.mod - skipping"
     return 0
   fi
 
@@ -297,7 +297,7 @@ install_service() {
     bun)    install_bun_service "$service_dir" ;;
     python) install_python_service "$service_dir" ;;
     go)     install_go_service "$service_dir" ;;
-    *)      log_warn "Unknown language for $service_name — skipping" ;;
+    *)      log_warn "Unknown language for $service_name - skipping" ;;
   esac
 }
 
@@ -315,7 +315,7 @@ setup_env() {
     log_success "Created docker/.env from .env.example"
     log_warn "  ⚠ Review and update docker/.env with your actual values (MongoDB URI, etc.)"
   elif [[ -f "$infra_dir/docker/.env" ]]; then
-    log_info "docker/.env already exists — skipping"
+    log_info "docker/.env already exists - skipping"
   fi
 
   # Create .env files for individual services if templates exist
@@ -375,7 +375,7 @@ print_summary() {
 main() {
   echo ""
   echo -e "${BOLD}${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${BOLD}${CYAN}║   Job Market Intelligence — Dependency Installer          ║${NC}"
+  echo -e "${BOLD}${CYAN}║   Job Market Intelligence - Dependency Installer          ║${NC}"
   echo -e "${BOLD}${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
   echo ""
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# dev.sh — Start all services in development mode
+# dev.sh - Start all services in development mode
 # =============================================================================
 # Usage:
 #   ./scripts/dev.sh                    # Start infrastructure + all services
@@ -111,7 +111,7 @@ start_infrastructure() {
   if [[ -f "$ENV_FILE" ]]; then
     env_flag="--env-file $ENV_FILE"
   else
-    log_warn "No .env file found at $ENV_FILE — using defaults"
+    log_warn "No .env file found at $ENV_FILE - using defaults"
   fi
 
   log_info "Starting containers..."
@@ -139,7 +139,7 @@ wait_for_infrastructure() {
         log_success "  $service is healthy"
         break
       elif [[ "$health" == "not_found" ]]; then
-        # Container might not have health check — check if running
+        # Container might not have health check - check if running
         local state
         state=$(docker compose -f "$DOCKER_COMPOSE_FILE" ps --format "{{.State}}" "$service" 2>/dev/null || echo "not_found")
         if [[ "$state" == "running" ]]; then
@@ -176,12 +176,12 @@ start_service() {
   local port="${SERVICE_PORT[$service_name]:-}"
 
   if [[ -z "$cmd" ]]; then
-    log_warn "No dev command configured for $service_name — skipping"
+    log_warn "No dev command configured for $service_name - skipping"
     return 0
   fi
 
   if [[ ! -d "$service_dir" ]]; then
-    log_warn "Directory not found: $service_dir — skipping"
+    log_warn "Directory not found: $service_dir - skipping"
     return 0
   fi
 
@@ -280,7 +280,7 @@ print_status() {
   for service_name in "${!SERVICE_CMD[@]}"; do
     local port="${SERVICE_PORT[$service_name]:-N/A}"
     local status="stopped"
-    local pid="—"
+    local pid="-"
 
     if [[ -f "$PID_DIR/$service_name.pid" ]]; then
       pid=$(cat "$PID_DIR/$service_name.pid")
@@ -288,7 +288,7 @@ print_status() {
         status="${GREEN}running${NC}"
       else
         status="${RED}dead${NC}"
-        pid="—"
+        pid="-"
       fi
     fi
 
@@ -309,7 +309,7 @@ print_status() {
 main() {
   echo ""
   echo -e "${BOLD}${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${BOLD}${CYAN}║   Job Market Intelligence — Development Server           ║${NC}"
+  echo -e "${BOLD}${CYAN}║   Job Market Intelligence - Development Server           ║${NC}"
   echo -e "${BOLD}${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
   echo ""
 
